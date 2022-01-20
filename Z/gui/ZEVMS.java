@@ -106,6 +106,7 @@ public class ZEVMS extends javax.swing.JFrame {
     public static void main(String args[]) throws Exception {
         说明();
         System.out.println("○ 服务端开始加载");
+        //设置界面风格
         ZEVMS.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
         try {
@@ -116,16 +117,9 @@ public class ZEVMS extends javax.swing.JFrame {
         }
         //检测是否有网络();
         //检测运行文件();
-        检测数据库();
+        //检测数据库(); todo:
         //播放音乐文件
         Properties 設定檔 = System.getProperties();
-        String 欢迎音效播放 = 設定檔.getProperty("user.dir") + "\\dist\\lib\\Welcome.mp3";
-        try {
-            BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(欢迎音效播放));
-            Player player = new Player(buffer);
-            player.play();
-        } catch (Exception e) {
-        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 System.out.println("○ 启动服务端登陆窗口");
@@ -134,6 +128,9 @@ public class ZEVMS extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * E:\BaiduNetdiskDownload\服务端\ZEVMS\MYSQL\MySQL\data\zevms\mxmxd_fumo_info.zip
+     */
     public static void 检测数据库() {
         System.out.println("○ 开始检测数据库");
         //附魔显示表更新
@@ -172,6 +169,7 @@ public class ZEVMS extends javax.swing.JFrame {
 
     //服务端启动窗口
     public ZEVMS() {
+        initProperties();
         Properties 設定檔 = System.getProperties();
         //设置窗口
         setTitle("" + 服务端名称 + " Ver." + 版本 + "");
@@ -207,6 +205,13 @@ public class ZEVMS extends javax.swing.JFrame {
         GetConfigValues();
     //    账号.setText("" + gui.Start.ConfigValuesMap.get("记录账号") + "");
         //刷新网关开关();
+    }
+
+    /**
+     * todo：后期改成文件读取或命令行
+     */
+    private void initProperties() {
+        System.setProperty("net.sf.odinms.wzpath", "wz");
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

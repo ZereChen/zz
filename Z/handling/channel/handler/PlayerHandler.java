@@ -1423,6 +1423,12 @@ public class PlayerHandler {
 
     }
 
+    /**
+     * 角色移动
+     * @param slea 操作
+     * @param c netty client
+     * @param chr 角色信息
+     */
     public static final void MovePlayer(final LittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {//角色移动就会判断
         if (chr == null) {
             return;

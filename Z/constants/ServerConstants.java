@@ -21,8 +21,8 @@ public class ServerConstants {
     public static final int MTS_MESO = 5000; //mesos needed
     public static final int CHANNEL_COUNT = 200;
     //服务端输出操作
-    public static boolean 封包显示 = Boolean.parseBoolean(ServerProperties.getProperty("ZEV.封包显示", "false"));//
-    public static boolean 调试输出封包 = Boolean.parseBoolean(ServerProperties.getProperty("ZEV.调试输出封包", "ture"));
+    public static boolean 封包显示 = Boolean.parseBoolean(ServerProperties.getProperty("ZEV.封包显示", "true"));//
+    public static boolean 调试输出封包 = Boolean.parseBoolean(ServerProperties.getProperty("ZEV.调试输出封包", "true"));
     public static boolean 自动注册 = true;
     public static boolean Super_password = false;
     public static final boolean PACKET_ERROR_OFF = Boolean.parseBoolean(ServerProperties.getProperty("ZEV.记录38错误", "false"));

@@ -3,6 +3,8 @@
  */
 package tools;
 
+import handling.netty.MaplePacketEncoder;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -200,10 +202,17 @@ public class MapleAESOFB {
     }
 
     /**
-     * Generates a new IV.
+     * Generates a new IV.6
      */
     private void updateIv() {
         this.iv = getNewIv(this.iv);
+    }
+
+    public static byte[] getPacketHeader(int length, short mapleVersion, byte iv2, byte iv3) {
+        int iiv = (((iv3) & 0xFF) | ((iv2 << 8) & 0xFF00)) ^ mapleVersion;
+        int mlength = (((length << 8) & 0xFF00) | (length >>> 8)) ^ iiv;
+
+        return new byte[]{(byte) ((iiv >>> 8) & 0xFF), (byte) (iiv & 0xFF), (byte) ((mlength >>> 8) & 0xFF), (byte) (mlength & 0xFF)};
     }
 
     /**
@@ -239,6 +248,13 @@ public class MapleAESOFB {
      * <code>false</code> otherwise.
      */
     public boolean checkPacket(byte[] packet) {
+        System.out.println("packet=[" + HexTool.toString(packet)+ "]");
+        System.out.println("iv23=[" + HexTool.toString(iv[2]) + " "+ HexTool.toString(iv[3])+ "]");
+        System.out.println("^结果=["+HexTool.toString((packet[0] ^ iv[2]) & 0xFF ) + " "+ HexTool.toString((packet[1] ^ iv[3]) & 0xFF )+"]");
+        //mapleVersion取后2字节
+        System.out.println("mapleVersion=[" + HexTool.toString((mapleVersion >> 8) & 0xFF) + " " + HexTool.toString(mapleVersion & 0xFF) + "]");
+        System.out.println("mapleVersion=[" + HexTool.toString(mapleVersion) +"]");
+
         return ((((packet[0] ^ iv[2]) & 0xFF) == ((mapleVersion >> 8) & 0xFF)) && (((packet[1] ^ iv[3]) & 0xFF) == (mapleVersion & 0xFF)));
     }
 
@@ -269,6 +285,22 @@ public class MapleAESOFB {
         return in;
     }
 
+    public static void main(String[] args) {
+        byte[] src = new byte[4];
+        src[0] = (byte) 0x46;
+        src[1] = (byte) 0x72;
+        src[2] = (byte) 0x0C;
+        src[3] = (byte) 0xB7;
+
+        for (int i=1;i<=20;i++) {
+            src = getNewIv(src);
+            byte[] token = getPacketHeader(4, (short) 20224, src[2], src[3]);
+            System.out.println(i+":iv=[" + HexTool.toString(src)+"], token=[" +HexTool.toString(token)+"]");
+        }
+
+//        System.arraycopy(dst, 0, src, 0, 4);
+
+    }
     /**
      * Returns the IV of this instance as a string.
      */

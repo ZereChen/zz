@@ -12,6 +12,7 @@ import client.Class2;
 import client.DebugWindow;
 import client.MapleCharacter;
 import client.SkillFactory;
+import constants.LogConstants;
 import handling.MapleServerHandler;
 import handling.channel.ChannelServer;
 import handling.channel.MapleGuildRanking;
@@ -164,7 +165,7 @@ public class Start {
         System.out.println("○ 开始加载技能范围检测");
         读取技能范围检测();
         System.out.println("○ 开始加载地图吸怪检测");
-        读取地图吸怪检测();
+//        读取地图吸怪检测();
         System.out.println("○ 开始加载PVP技能配置");
         读取技能PVP伤害();
         System.out.println("○ 开始加载个人配置信息");
@@ -707,32 +708,29 @@ public class Start {
     public static int 异常警告 = 0;
 
     public static void 定时查询(final int time) {
-        Timer.WorldTimer.getInstance().register(new Runnable() {
-            @Override
-            public void run() {
-                if (定时查询 > 0) {
-                    try {
-                        try (PreparedStatement psu = DatabaseConnection.getConnection().prepareStatement("SELECT COUNT(id) FROM accounts WHERE loggedin > 0")) {
-                            psu.execute();
-                            psu.close();
-                            System.err.println("[服务端]" + CurrentReadable_Time() + " : 检测数据库通信 √");
-                            if (异常警告 > 0) {
-                                通信("服务端数据库通信已恢复");
-                                异常警告 = 0;
-                            }
-                        }
-                    } catch (SQLException ex) {
-                        System.err.println("[服务端]" + CurrentReadable_Time() + " : 检测数据库通信 × " + ex.getMessage());
-                        if (异常警告 >= 5) {
-                            通信("服务端数据库通信严重异常，请及时重启数据库");
-                        } else {
-                            通信("服务端数据库通信异常，如果持续提示此信息，请重启数据库");
-                            异常警告++;
+        Timer.WorldTimer.getInstance().register(() -> {
+            if (定时查询 > 0) {
+                try {
+                    try (PreparedStatement psu = DatabaseConnection.getConnection().prepareStatement("SELECT COUNT(id) FROM accounts WHERE loggedin > 0")) {
+                        psu.execute();
+                        psu.close();
+                        System.err.println(LogConstants.SERVER + CurrentReadable_Time() + " : 检测数据库通信 √");
+                        if (异常警告 > 0) {
+                            通信("服务端数据库通信已恢复");
+                            异常警告 = 0;
                         }
                     }
-                } else {
-                    定时查询++;
+                } catch (SQLException ex) {
+                    System.err.println(LogConstants.SERVER + CurrentReadable_Time() + " : 检测数据库通信 × " + ex.getMessage());
+                    if (异常警告 >= 5) {
+                        通信("服务端数据库通信严重异常，请及时重启数据库");
+                    } else {
+                        通信("服务端数据库通信异常，如果持续提示此信息，请重启数据库");
+                        异常警告++;
+                    }
                 }
+            } else {
+                定时查询++;
             }
         }, 60 * 1000 * time);
     }

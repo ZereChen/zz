@@ -303,8 +303,12 @@ public class MapleServerHandler extends ChannelDuplexHandler {
         super.channelInactive(ctx);
     }
 
+    /**
+     * 玩家指令
+     * @param ctx
+     * @param message
+     */
     @Override
-    //玩家操作
     public void channelRead(final ChannelHandlerContext ctx, final Object message) {
         try {
 
@@ -396,6 +400,14 @@ public class MapleServerHandler extends ChannelDuplexHandler {
         super.userEventTriggered(ctx, status);
     }
 
+    /**
+     * 真实的业务逻辑（玩家操作）
+     * @param header
+     * @param slea
+     * @param c
+     * @param cs
+     * @throws Exception
+     */
     public static void handlePacket(final RecvPacketOpcode header, final LittleEndianAccessor slea, final MapleClient c, final boolean cs) throws Exception {
 
         //System.out.println(header);
