@@ -30,7 +30,7 @@ public class MaplePacketEncoder extends MessageToByteEncoder<Object> {
 
 
     public static void main(String[] args) {
-        System.out.println(HexTool.toString(MapleAESOFB.getPacketHeader(4,(short)20224, (byte) 0x45, (byte) 0x78)));
+        System.out.println(HexTool.toString(MapleAESOFB.getPacketHeader(4,(short)20224, new byte[]{0x00, 0x00, (byte) 0x45, (byte) 0x78})));
 //        final byte serverRecv[] = new byte[]{70, 114, 12, (byte) Randomizer.nextInt(255)};
 //        final byte serverSend[] = new byte[]{82, 48, 120, (byte) Randomizer.nextInt(255)};
 //        final byte ivRecv[] = ServerConstants.Use_Fixed_IV ? new byte[]{9, 0, 0x5, 0x5F} : serverRecv;
